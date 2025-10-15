@@ -17,7 +17,7 @@ const Hero = () => {
         muted
         className="absolute inset-0 w-full h-full object-cover -z-10"
       >
-        <source src="/video/Home.mp4" type="video/mp4" />
+        <source src="/video/DNA.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-black/60 -z-10 backdrop-blur-sm"></div>
 
