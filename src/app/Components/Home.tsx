@@ -1,75 +1,107 @@
-import { FacebookIcon, GithubIcon, LinkedinIcon, InstagramIcon } from 'lucide-react';
+"use client";
+import { Linkedin, Facebook, Instagram, Globe } from "lucide-react";
+import Image from "next/image";
+import { TypeAnimation } from "react-type-animation";
+import { motion } from "framer-motion";
 
-import { TypewriterEffectSmooth } from "./../Components/ui/typewriter-effect";
-import Avatar from './../Components/Avatar';
-
-const Home = () => {
-    const words = [
-        {
-          text: "And",
-          className: "text-3xl md:text-4xl text-white/90 ",
-        },
-        {
-          text: "I'm",
-          className: "text-3xl md:text-4xl text-white/90 mr-1",
-        },
-        {
-          text: "an",
-          className: "text-3xl md:text-4xl text-white/90 mr-1",
-        },
-        {
-          text: "Ethical Hacker.",
-          className: "text-3xl md:text-4xl text-purple-400/90 font-bold font-josefinSlab",
-        },
-      ];
-      
-    const SocialLinks = () => {
-        return (
-          <div className="flex flex-wrap gap-4 items-center md:pt-6">
-            <a href="https://www.facebook.com/profile.php?id=100017944472776" target="_blank" rel="noopener noreferrer" className="p-3 border border-purple-600 rounded-full">
-              <FacebookIcon className="w-4 h-4 md:w-6 md:h-6 text-blue-500 hover:scale-[1.2] transition-transform ease-in-out duration-100" />
-            </a>
-            <a href="https://github.com/ShadowOG42" target="_blank" rel="noopener noreferrer" className="p-3 border border-purple-600 rounded-full">
-            <GithubIcon className="w-4 h-4 md:w-6 md:h-6 text-gray-400 hover:scale-[1.2] transition-transform ease-in-out duration-100" />
-            </a>
-            <a href="https://www.linkedin.com/in/dipesh-karki-2145a3227/" target="_blank" rel="noopener noreferrer" className="p-3 border border-purple-600 rounded-full">
-              <LinkedinIcon className="w-4 h-4 md:w-6 md:h-6 text-blue-600 hover:scale-[1.2] transition-transform ease-in-out duration-100" />
-            </a>
-            <a href="https://www.instagram.com/dipkarki9/" target="_blank" rel="noopener noreferrer" className="p-3 border border-purple-600 rounded-full">
-              <InstagramIcon className="w-4 h-4 md:w-6 md:h-6 text-pink-400 hover:scale-[1.2] transition-transform duration-50" />
-            </a>
-            <button className="ml-auto px-4 p-2 md:px-6 md:p-3 border md:relative md:right-24 text-sm md:text-base text-white/80 hover:text-white/90 border-purple-600 bg-purple-600/70 rounded-full">
-              Download CV
-            </button>
-          </div>
-        )
-      }
-      SocialLinks.displayName = "SocialLinks";
+const Hero = () => {
   return (
-    <main id='home' className="min-h-[calc(100vh-4rem)] ">
-      <div className="intro flex flex-col md:flex-row items-center justify-between w-full px-6 md:px-16 lg:px-44 pt-10 md:pt-32 gap-8">
-        <div className="w-full md:w-1/2 order-2 md:order-1">
-          <div className="space-y-6 text-white">
-            <div className="space-y-3">
-              <p className="text-3xl md:text-4xl text-white/90">Hello, It&apos;s me</p>
-              <p className="text-5xl md:text-6xl font-josefinSlab text-purple-200">Dipesh Karki</p>
-              <TypewriterEffectSmooth words={words} />
-            </div>
-            {/* <p className="indent-md">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quo suscipit earum quos numquam architecto distinctio quam accusantium harum eaque
-              nostrum.
-            </p>
-            <p className="indent-md">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quo suscipit earum quos numquam architecto distinctio quam accusantium harum eaque
-              nostrum.
-            </p> */}
-            <SocialLinks />
-          </div>
-        </div>
-      <Avatar />
-      </div>
-    </main>
-  )
-}
+    <section
+      id="home"
+      className="relative h-screen flex flex-col md:flex-row items-center justify-between text-white overflow-hidden"
+    >
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        className="absolute inset-0 w-full h-full object-cover -z-10"
+      >
+        <source src="/video/Home.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-black/60 -z-10 backdrop-blur-sm"></div>
 
-export default Home
+      {/* Left Section */}
+      <div className="w-full md:w-1/2 flex flex-col justify-center px-10 space-y-6">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-4xl md:text-5xl font-bold leading-tight"
+        >
+          <TypeAnimation
+            sequence={[
+              "Hey, I'm Dinesh Karki.", 2000,
+              "Clinical Laboratory Science Student at CQUniversity.", 2000,
+              "Passionate about Research & Healthcare Innovation.", 2000,
+            ]}
+            speed={50}
+            repeat={Infinity}
+          />
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="text-lg text-gray-200 max-w-lg"
+        >
+          I’m driven by curiosity, precision, and a passion for uncovering insights that improve human health.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="flex gap-4"
+        >
+          <a href="#projects" className="bg-cyan-600 px-5 py-2 rounded-lg font-medium hover:bg-cyan-700 transition">
+            View My Work
+          </a>
+          <a href="/Dinesh_Resume.pdf" download className="border border-white px-5 py-2 rounded-lg font-medium hover:bg-white hover:text-black transition">
+            Download Resume
+          </a>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
+          className="flex gap-4 mt-4"
+        >
+          <a href="https://linkedin.com/in/dinesh-karki" target="_blank" rel="noreferrer">
+            <Linkedin className="hover:text-blue-400" />
+          </a>
+          <a href="https://facebook.com/dinesh.karki" target="_blank" rel="noreferrer">
+            <Facebook className="hover:text-blue-400" />
+          </a>
+          <a href="https://instagram.com/dinesh.karki" target="_blank" rel="noreferrer">
+            <Instagram className="hover:text-pink-400" />
+          </a>
+          <a href="https://dineshkarki.com" target="_blank" rel="noreferrer">
+            <Globe className="hover:text-green-400" />
+          </a>
+        </motion.div>
+      </div>
+
+      {/* Right Section */}
+      <motion.div
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 1 }}
+        className="w-full md:w-1/2 flex justify-center mt-10 md:mt-0"
+      >
+        <div className="relative w-80 h-80 md:w-96 md:h-96 rounded-full shadow-2xl border-4 border-white overflow-hidden hover:scale-105 transition-transform duration-300">
+          <Image
+            src="/Images/Dinesh.jpg"
+            alt="Dinesh Karki"
+            fill
+            className="object-cover"
+          />
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
+export default Hero;
