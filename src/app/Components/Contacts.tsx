@@ -1,24 +1,57 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin } from "lucide-react";
 
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
 const Contact = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [formStatus, setFormStatus] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  // Handle form submit
+  // Handle input changes
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Validate form
+  const validateForm = () => {
+    if (!formData.name || !formData.email || !formData.message) {
+      setFormStatus("⚠️ Please fill in all required fields.");
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setFormStatus("⚠️ Please enter a valid email address.");
+      return false;
+    }
+    return true;
+  };
+
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const formData = {
-      name: (form.elements.namedItem("name") as HTMLInputElement).value,
-      email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
-    };
+    if (!validateForm()) return;
+
+    setLoading(true);
+    setFormStatus("⏳ Sending...");
 
     try {
       const res = await fetch("/api/contact", {
@@ -27,15 +60,21 @@ const Contact = () => {
         body: JSON.stringify(formData),
       });
 
-      if (res.ok) {
-        alert("✅ Message sent successfully!");
-        form.reset();
+      const data = await res.json();
+
+      if (data.success) {
+        setFormStatus("✅ Message sent successfully!");
+        setFormData({ name: "", email: "", message: "" });
       } else {
-        alert("❌ Failed to send message. Please try again later.");
+        setFormStatus(`❌ Failed to send: ${data.error || "Unknown error"}`);
       }
-    } catch (error) {
-      console.error("Error sending message:", error);
-      alert("⚠️ Something went wrong. Please try again.");
+    } catch (err: unknown) {
+      let errorMsg = "❌ Something went wrong. Please try again.";
+      if (err instanceof Error) errorMsg = `❌ Error: ${err.message}`;
+      setFormStatus(errorMsg);
+      console.error("Contact form error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +99,6 @@ const Contact = () => {
         <p className="text-gray-400 text-lg mt-4 text-center max-w-2xl">
           I&apos;d love to hear from you! Reach out for collaboration, questions, or just to say hi.
         </p>
-
       </motion.div>
 
       {/* Contact Form */}
@@ -75,29 +113,66 @@ const Contact = () => {
           name="name"
           type="text"
           placeholder="Your Name"
+          value={formData.name}
+          onChange={handleChange}
           className="w-full border border-gray-600 rounded-lg px-4 py-2 bg-slate-900/50 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 transition"
+          disabled={loading}
           required
         />
         <input
           name="email"
           type="email"
           placeholder="Your Email"
+          value={formData.email}
+          onChange={handleChange}
           className="w-full border border-gray-600 rounded-lg px-4 py-2 bg-slate-900/50 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 transition"
+          disabled={loading}
           required
         />
         <textarea
           name="message"
           placeholder="Your Message"
           rows={4}
+          value={formData.message}
+          onChange={handleChange}
           className="w-full border border-gray-600 rounded-lg px-4 py-2 bg-slate-900/50 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 transition"
+          disabled={loading}
           required
         ></textarea>
+
         <button
           type="submit"
-          className="w-full bg-cyan-500 text-white py-2 rounded-lg hover:bg-cyan-600 transition"
+          className="w-full bg-cyan-500 text-white py-2 rounded-lg hover:bg-cyan-600 transition flex justify-center items-center"
+          disabled={loading}
         >
-          Send Message
+          {loading && (
+            <svg
+              className="animate-spin h-5 w-5 mr-2 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+              ></path>
+            </svg>
+          )}
+          {loading ? "Sending..." : "Send Message"}
         </button>
+
+        {formStatus && (
+          <p className="text-center text-cyan-300 font-medium mt-2">{formStatus}</p>
+        )}
       </motion.form>
 
       {/* Contact Info */}
